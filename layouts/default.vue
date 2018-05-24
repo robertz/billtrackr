@@ -42,7 +42,7 @@
 
     </v-toolbar>
     <v-content>
-      <v-container fluid fill-height="">
+      <v-container fluid fill-height>
         <nuxt />
       </v-container>
     </v-content>
@@ -104,8 +104,8 @@
           { icon: 'home', title: 'Dashboard', to: '/dashboard' },
           { icon: 'people', title: 'Payees', to: '/payees' },
           { icon: 'attach_money', title: 'Payments', to: '/payments' },
-          { icon: 'today', title: 'Week', to: '/dashboard' },
-          { icon: 'timeline', title: 'Month', to: '/dashboard' },
+          { icon: 'today', title: 'Week', to: '/week' },
+          { icon: 'timeline', title: 'Month', to: '/month' },
           { icon: 'exit_to_app', title: 'Sign Off', to: '/auth/sign-off' }
         ],
         miniVariant: false,

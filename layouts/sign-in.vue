@@ -1,19 +1,21 @@
 <template>
   <v-app dark>
     <v-content>
-      <v-container>
-        <nuxt />
+      <v-container fluid class="wrapper">
+          <nuxt/>
       </v-container>
     </v-content>
   </v-app>
 </template>
 
-<script>
-  export default {
-    data () {
-      return {
-
-      }
-    }
+<style scoped>
+  .wrapper {
+    background: url(/images/aidan-bartos-313782-unsplash.jpg) no-repeat center center fixed;
+    background-size: cover; 
+    height: 100%;
+    overflow: hidden;
   }
-</script>
+  #auth0-lock {
+    padding-top: 48px;
+  }
+</style>

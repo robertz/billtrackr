@@ -7,7 +7,8 @@ Vue.use(Vuex)
 const store = () => new Vuex.Store({
   state: {
     sidebar: false,
-    refDate: null,
+    init: false,
+    refDate: '2018-05-24',
     user: null,
     userSettings: null,
     payees: [],
@@ -46,6 +47,9 @@ const store = () => new Vuex.Store({
     SET_REFDATE (state, refDate) {
       state.refDate = refDate || null
     },
+    SET_INIT (state, init) {
+      state.init = init
+    },
     toggleSidebar (state) {
       state.sidebar = !state.sidebar
     }
@@ -74,6 +78,9 @@ const store = () => new Vuex.Store({
     async refreshPayments (ctx) {
       let res = await axios.get(`https://api.billtrackr.com/user/${this.state.user.app_metadata.userid}/payments`)
       ctx.commit('SET_PAYMENTS', res.data)
+    },
+    async setInitialized (ctx) {
+      ctx.commit('SET_INIT', true)
     },
     async nuxtServerInit ({ commit }) {
       if (!this.state.user) return

@@ -91,6 +91,7 @@
         await this.$store.dispatch('refreshUserSettings')
         await this.$store.dispatch('refreshPayees')
         await this.$store.dispatch('refreshPayments')
+        await this.$store.dispatch('setInitialized')
       }
       this.offsetProxy = this.userSettings.offset
       this.tzProxy = this.userSettings.tz

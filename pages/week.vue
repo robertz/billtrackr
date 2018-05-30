@@ -60,7 +60,7 @@
       hide-actions
       class="elevation-1 mt-4">
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
+        <td><nuxt-link :to="'/payees/' + props.item.id" style="text-decoration: none;">{{ props.item.name }}</nuxt-link></td>
         <td>{{ props.item.date.format('ddd, DD MMM YYYY') }}</td>
         <td class="hidden-sm-and-down">{{ props.item.apr | pct }}</td>
         <td width="20%">
@@ -111,7 +111,6 @@ export default {
   middleware: 'authenticated',
   data () {
     return {
-      ref: new Moment().format('YYYY-MM-DD'),
       addPayment: false,
       headers: [
         { text: 'Name', sortable: false, value: 'name' },
@@ -143,7 +142,9 @@ export default {
   },
   methods: {
     setWeek (dt) {
-      this.ref = dt
+      dt = dt || new Moment().format('YYYY-MM-DD')
+      this.$store.commit('SET_REFDATE', dt)
+      this.$router.push({ path: '/week?dt=' + dt })
     },
     handlePayment (id, isPaid) {
       if (isPaid) {
@@ -180,9 +181,9 @@ export default {
         return payee.active === true
       })
       // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
-      let startOfWeek = new Moment(this.ref).startOf('week').subtract(7 - this.userSettings.offset, 'days')
+      let startOfWeek = new Moment(this.refDate).startOf('week').subtract(7 - this.userSettings.offset, 'days')
       // Compensate for offset logic going too far back
-      if (new Moment(this.ref).diff(startOfWeek, 'days') >= 7) {
+      if (new Moment(this.refDate).diff(startOfWeek, 'days') >= 7) {
         startOfWeek.add(7, 'days')
       }
       let endOfWeek = new Moment(startOfWeek).add(6, 'days')
@@ -221,7 +222,7 @@ export default {
 
       for (let i = 0; i < this.payees.length; i++) {
         // How many months to add to bring the reference date to the current month
-        let diff = new Moment(this.ref).diff(this.payees[i].ref, 'months')
+        let diff = new Moment(this.refDate).diff(this.payees[i].ref, 'months')
         let eventDate = new Moment(this.payees[i].ref).add(diff, 'months')
         if (eventDate.isBefore(startOfWeek)) {
           eventDate.add(1, 'month')
@@ -294,7 +295,7 @@ export default {
       }
       return data
     },
-    ...mapState(['payees', 'payments', 'userSettings', 'refDate', 'init']),
+    ...mapState(['payees', 'payments', 'userSettings', 'refDate', 'refDate', 'init']),
     ...mapGetters(['loggedUser'])
   }
 }

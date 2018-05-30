@@ -1,30 +1,30 @@
 <template>
 
-  <v-flex fill-height>
+  <v-flex fill-height v-if="init">
     <v-card>
       <v-card-title primary-title>
         <div class="headline">{{ current.name }}</div>
       </v-card-title>
       <v-card-text>
-          <v-layout row wrap>
-            <v-flex xs6>
-              One
-            </v-flex>
-            <v-flex xs6>
-              Two
-            </v-flex>
-          </v-layout>
-        </v-card-text>
+
+        <div class="subheading">{{ current.description }}</div>
+        <v-layout row wrap>
+          <v-flex xs12>
+            Payment of <strong>{{ current.amount | currencyFormat }}</strong> due on the <strong>{{ current.ref | moment('Do') }}</strong>
+          </v-flex>
+        </v-layout>
+
+      </v-card-text>
     </v-card>
 
     <v-data-table
       :headers="headers"
       :items="computedPayments"
-      class="elevation-1">
+      class="elevation-1 mt-3">
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.ref | moment('ddd DD MM YYYY') }}</td>
+        <td>{{ props.item.ref | moment('ddd DD MMM YYYY') }}</td>
         <td>{{ props.item.createdAt | moment('ddd DD MMM YYYY') }}</td>
-        <td>{{ props.item.amount }}</td>
+        <td>{{ props.item.amount | currencyFormat }}</td>
       </template>
     </v-data-table>
   </v-flex>
@@ -54,12 +54,15 @@ export default {
     current () {
       return this.payees.filter(payee => payee._id === this.$route.params.id)[0] || {}
     },
-    ...mapState(['payees', 'payments']),
+    ...mapState(['payees', 'payments', 'init']),
     ...mapGetters(['loggedUser'])
   },
   filters: {
     moment (value, format) {
       return new Moment(value).format(format)
+    },
+    currencyFormat (value) {
+      return '$' + parseFloat(value).toFixed(2)
     }
   }
 }

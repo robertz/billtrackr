@@ -13,7 +13,6 @@
           :to="item.to"
           :key="i"
           v-for="(item, i) in items"
-          exact
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
@@ -95,6 +94,12 @@
       }
       this.offsetProxy = this.userSettings.offset
       this.tzProxy = this.userSettings.tz
+
+      if (('dt' in this.$route.query) && new Moment(this.$route.query.dt).isValid()) {
+        this.$store.commit('SET_REFDATE', this.$route.query.dt)
+      } else {
+        this.$store.commit('SET_REFDATE', new Moment().format('YYYY-MM-DD'))
+      }
     },
     data () {
       return {

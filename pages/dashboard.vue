@@ -37,6 +37,8 @@ export default {
     forecast () {
       if (!this.init) return []
 
+      Moment.tz.setDefault(this.userSettings.tz)
+
       let activePayees = this.payees.filter((payee) => {
         return payee.active === true
       })
@@ -53,13 +55,13 @@ export default {
           startOfWeek: startOfWeek,
           endOfWeek: endOfWeek,
           prev: new Moment(startOfWeek).subtract(1, 'week').format('YYYY-MM-DD'),
-          next: new Moment(endOfWeek).add(1, 'week').format('YYYY-MM-DD')
+          next: new Moment(startOfWeek).add(1, 'week').format('YYYY-MM-DD')
         },
         stats: {
           count: 0,
           amountDue: 0,
           amountPaid: 0,
-          amountRemaining: 0,
+          amountRemain: 0,
           amountCredit: 0,
           percentMonth: 0,
           percentWeek: 0,
@@ -83,7 +85,7 @@ export default {
       for (let i = 0; i < this.payees.length; i++) {
         // How many months to add to bring the reference date to the current month
         let diff = new Moment(this.ref).diff(this.payees[i].ref, 'months')
-        let eventDate = new Moment(this.payees[i].ref).tz(this.userSettings.tz).add(diff, 'months')
+        let eventDate = new Moment(this.payees[i].ref).add(diff, 'months')
         if (eventDate.isBefore(startOfWeek)) {
           eventDate.add(1, 'month')
         }
@@ -96,10 +98,11 @@ export default {
           let isPaid = this.payments.filter((payment) => {
             return (payment.payee === this.payees[i]._id && payment.ref === eventDate.format('YYYY-MM-DD'))
           })
+
           // Hide occurences of payees before its ref date AND the payee is ACTIVE OR
           // there is a payment for the current period. Payee data may be required for
           // historical reasons
-          if ((eventDate.isAfter(new Moment(this.payees[i].ref).tz(this.userSettings.tz)) || eventDate.isSame(new Moment(this.payees[i].ref).tz(this.userSettings.tz))) && (this.payees[i].active || isPaid.length)) {
+          if ((eventDate.isAfter(new Moment(this.payees[i].ref)) || eventDate.isSame(new Moment(this.payees[i].ref))) && (this.payees[i].active || isPaid.length)) {
             // Stub out the payment information for the page
             let payeeData = {
               id: this.payees[i]._id,

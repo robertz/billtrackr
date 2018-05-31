@@ -12,6 +12,22 @@
           <v-flex xs12>
             Payment of <strong>{{ current.amount | currencyFormat }}</strong> due on the <strong>{{ current.ref | moment('Do') }}</strong>
           </v-flex>
+          <v-flex xs12 v-if="computedAverage != current.amount">
+            Average payment is <strong>{{ computedAverage | currencyFormat }}</strong>
+          </v-flex>
+
+          <v-flex xs12>
+            <v-btn
+              color="primary"
+              v-if="current.url"
+              :href="current.url"
+              target="_blank"
+              small>
+              <v-icon>credit_card</v-icon>
+              <span class="ml-2">Pay Online</span>
+            </v-btn>
+          </v-flex>
+
         </v-layout>
 
       </v-card-text>
@@ -48,6 +64,13 @@ export default {
     }
   },
   computed: {
+    computedAverage () {
+      if (!this.computedPayments.length) {
+        return this.current.amount
+      } else {
+        return this.computedPayments.reduce((acc, payment) => acc + payment.amount, 0) / this.computedPayments.length
+      }
+    },
     computedPayments () {
       return this.payments.filter((payment) => { return payment.payee === this.id })
     },

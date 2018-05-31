@@ -33,6 +33,11 @@ import _ from 'lodash'
 
 export default {
   middleware: 'authenticated',
+  created () {
+    return {
+      ref: new Moment().format('YYYY-MM-DD')
+    }
+  },
   computed: {
     forecast () {
       if (!this.init) return []
@@ -158,7 +163,7 @@ export default {
       return data
     },
     ...mapGetters(['loggedUser']),
-    ...mapState(['payees', 'payments', 'userSettings', 'ref', 'init'])
+    ...mapState(['payees', 'payments', 'userSettings', 'init'])
   },
   filters: {
     dayFormat (value) {

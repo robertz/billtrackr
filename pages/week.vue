@@ -174,9 +174,7 @@ export default {
   computed: {
     forecast () {
       if (!this.init) return []
-
       Moment.tz.setDefault(this.userSettings.tz)
-
       let activePayees = this.payees.filter((payee) => {
         return payee.active === true
       })
@@ -187,7 +185,6 @@ export default {
         startOfWeek.add(7, 'days')
       }
       let endOfWeek = new Moment(startOfWeek).add(6, 'days')
-
       let data = {
         timing: {
           startOfWeek: startOfWeek,
@@ -215,11 +212,9 @@ export default {
         },
         payees: []
       }
-
       for (let d = 0; d < 7; d++) {
         data.graph.dailyOrder[d] = new Moment(startOfWeek).add(d, 'days').format('D')
       }
-
       for (let i = 0; i < this.payees.length; i++) {
         // How many months to add to bring the reference date to the current month
         let diff = new Moment(this.refDate).diff(this.payees[i].ref, 'months')
@@ -230,13 +225,11 @@ export default {
         // ts and te is one day before and one day after so dates fall in between
         let ts = new Moment(startOfWeek).subtract(1, 'day')
         let te = new Moment(endOfWeek).add(1, 'day')
-
         if (eventDate.isBetween(ts, te)) {
           // Is the current payee/payment ref found in the payment list
           let isPaid = this.payments.filter((payment) => {
             return (payment.payee === this.payees[i]._id && payment.ref === eventDate.format('YYYY-MM-DD'))
           })
-
           // Hide occurences of payees before its ref date AND the payee is ACTIVE OR
           // there is a payment for the current period. Payee data may be required for
           // historical reasons
@@ -295,7 +288,7 @@ export default {
       }
       return data
     },
-    ...mapState(['payees', 'payments', 'userSettings', 'refDate', 'refDate', 'init']),
+    ...mapState(['payees', 'payments', 'userSettings', 'refDate', 'init']),
     ...mapGetters(['loggedUser'])
   }
 }

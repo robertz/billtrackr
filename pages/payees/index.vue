@@ -6,7 +6,7 @@
         fab
         dark
         color="red"
-        @click.native="createFlag = true">
+        @click.native="handleAddNew()">
         <v-icon>add</v-icon>
       </v-btn>
       <v-data-table
@@ -29,61 +29,79 @@
       <v-card>
         <v-card-title class="headline">Create Payee</v-card-title>
         <v-card-text>
-          <v-layout row wrap>
-            <v-flex xs12 class="px-2">
-              <v-text-field
-                v-model="editing.name"
-                label="Name"
-                type="text">
-              </v-text-field>
-            </v-flex>
+          <v-form ref="form" v-model="editing.valid" lazy-validation>
 
-            <v-flex xs12 class="px-2">
-              <v-text-field
-                v-model="editing.ref"
-                label="Ref Date"
-                type="date">
-              </v-text-field>
-            </v-flex>
+            <v-layout row wrap>
+              <v-flex xs12 class="px-2">
+                <v-text-field
+                  v-model="editing.name"
+                  :rules="[v => !!v || 'This field is required']"
+                  label="Name"
+                  type="text"
+                  required>
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs12 sm5>
-              <v-text-field
-                v-model="editing.amount"
-                label="Amount"
-                type="number"
-                step="0.01"
-                min="0"
-                max="9999">
-              </v-text-field>
-            </v-flex>
+              <v-flex xs12 class="px-2">
+                <v-text-field
+                  v-model="editing.description"
+                  label="Description"
+                  type="text">
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs12 offset-sm2 sm5>
-              <v-text-field
-                v-model="editing.apr"
-                label="APR %"
-                type="number"
-                step="0.01"
-                min="0"
-                max="100">
-              </v-text-field>
-            </v-flex>
+              <v-flex xs12 class="px-2">
+                <v-text-field
+                  v-model="editing.ref"
+                  :rules="[v => !!v || 'This field is required']"
+                  label="Ref Date"
+                  type="date"
+                  required>
+                </v-text-field>
+              </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                v-model="editing.url"
-                label="URL"
-                type="url">
-              </v-text-field>
-            </v-flex>
+              <v-flex xs12 sm5>
+                <v-text-field
+                  v-model="editing.amount"
+                  :rules="[v => !!v || 'This field is required']"
+                  label="Amount"
+                  type="number"
+                  step="0.01"
+                  prefix="$"
+                  required>
+                </v-text-field>
+              </v-flex>
 
-          </v-layout>
+              <v-flex xs12 offset-sm2 sm5>
+                <v-text-field
+                  v-model="editing.apr"
+                  :rules="[aprCheck]"
+                  :error-messages="errors.apr"
+                  label="APR %"
+                  type="number"
+                  step="0.01">
+                </v-text-field>
+              </v-flex>
 
+              <v-flex xs12>
+                <v-text-field
+                  v-model="editing.url"
+                  :rules="[urlCheck]"
+                  :error-messages="errors.url"
+                  label="URL"
+                  type="url">
+                </v-text-field>
+              </v-flex>
+
+            </v-layout>
+
+          </v-form>
 
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click.native="createFlag = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click.native="createFlag = false">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="createPayee()">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -92,8 +110,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Moment from 'moment-timezone'
+import axios from 'axios'
 
 export default {
   middleware: 'authenticated',
@@ -106,25 +125,71 @@ export default {
         { text: 'APR %', align: 'left', sortable: false, value: 'apr', class: 'hidden-sm-and-down' },
         { text: 'Amount', align: 'left', sortable: false, value: 'amount' }
       ],
+      errors: {
+        apr: [],
+        url: []
+      },
       editing: {
         active: true,
         amount: 0,
         apr: 0,
         autopay: false,
-        day: 1,
+        day: 0,
+        description: '',
         name: '',
         ref: '',
-        url: ''
+        url: '',
+        valid: false
       }
     }
   },
   methods: {
+    aprCheck () {
+      this.errors.apr = []
+      if (!this.editing.apr) return true
+
+      let current = parseFloat(this.editing.apr)
+
+      this.errors.apr = current < 0 || current > 100 ? 'APR can be between 0 and 100' : []
+
+      return true
+    },
+    urlCheck () {
+      this.errors.url = []
+      if (!this.editing.url) return true
+      this.errors.url = !/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!\\\\\w]*))?)/.test(this.editing.url) ? ['URL is invalid'] : []
+    },
+    handleAddNew () {
+      this.$refs.form.reset()
+      this.createFlag = true
+    },
     selectRow (id) {
       this.$router.push({ path: `/payees/${id}` })
+    },
+    async createPayee () {
+      // save the payment currently queued
+      if (this.$refs.form.validate()) {
+        await axios.post(`https://api.billtrackr.com/user/${this.loggedUser.app_metadata.userid}/payees`, {
+          name: this.editing.name,
+          description: this.editing.description,
+          amount: this.editing.amount,
+          ref: this.editing.ref,
+          url: this.editing.url,
+          apr: this.editing.apr,
+          day: new Moment(this.editing.ref).format('D')
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        await this.$store.dispatch('refreshPayees')
+        this.createFlag = false
+      }
     }
   },
   computed: {
-    ...mapState(['payees'])
+    ...mapState(['payees']),
+    ...mapGetters(['loggedUser'])
   },
   filters: {
     moment (value, format) {

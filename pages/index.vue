@@ -1,6 +1,9 @@
 <template>
-  <v-jumbotron color="grey lighten-2">
-    <v-container fill-height>
+  <v-jumbotron 
+    src="/images/victoria-heath-597279-unsplash.jpg"
+    dark>
+    <v-container 
+      fill-height>
       <v-layout align-center>
         <v-flex>
           <h3 class="display-3">BillTrackr</h3>
@@ -38,3 +41,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .with-backdrop {
+    background: url();
+  }
+</style>

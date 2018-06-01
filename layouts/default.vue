@@ -23,7 +23,8 @@
         </v-list-tile>
         <v-divider></v-divider>
         <v-container>
-          <a class="grey--text text--darken-2" @click="showSettings = !showSettings">Settings</a>
+          <a class="grey--text text--darken-2" @click.stop="today()">Go to Today</a>
+          <a class="grey--text text--darken-2 d-block" @click.stop="showSettings = !showSettings">Settings</a>
         </v-container>
       </v-list>
     </v-navigation-drawer>
@@ -136,6 +137,9 @@
       ...mapGetters(['loggedUser', 'isAuthenticated'])
     },
     methods: {
+      today () {
+        this.$store.commit('SET_REFDATE', new Moment().format('YYYY-MM-DD'))
+      },
       async refreshSettings () {
         await this.$store.dispatch('refreshUserSettings')
       },

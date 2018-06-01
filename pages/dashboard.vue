@@ -2,24 +2,33 @@
 
   <v-layout>
     <v-flex xs12>
+      <v-container fluid>
+        <div class="title">This Week</div>
+      </v-container>
+      <v-container v-bind="{ [`grid-list-md`]: true }" fluid>
+        <v-layout row wrap>
+          <v-flex
+            v-for="payee in forecast.payees"
+            :key="payee._id"
+            xs12 md3
+          >
+            <v-card flat tile class="elevation-1">
+              <v-card-text>
+                <v-layout row>
+                  <v-flex xs11>
+                    <h3>{{ payee.name }}</h3>
+                    {{ payee.amount | currencyFormat }} on the {{ payee.date | moment('Do') }}
+                  </v-flex>
+                  <v-flex xs1>
+                    <v-icon v-if="payee.isPaid" class="green--text">done</v-icon>
+                  </v-flex>
+                </v-layout>
 
-        <v-container v-bind="{ [`grid-list-md`]: true }" fluid>
-          <v-layout row wrap>
-            <v-flex
-              v-for="payee in forecast.payees"
-              :key="payee._id"
-              xs12 md4
-            >
-              <v-card flat tile class="elevation-1">
-                <v-card-text>
-                  <div class="title">{{ payee.name }}</div>
-                  {{ payee.amount | currencyFormat }} on the {{ payee.ref | dayFormat }}
-                  <v-icon v-if="payee.isPaid" class="green--text">done</v-icon>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-          </v-layout>
-        </v-container>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
 
     </v-flex>
   </v-layout>
@@ -41,20 +50,17 @@ export default {
   computed: {
     forecast () {
       if (!this.init) return []
-
       Moment.tz.setDefault(this.userSettings.tz)
-
       let activePayees = this.payees.filter((payee) => {
         return payee.active === true
       })
       // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
-      let startOfWeek = new Moment(this.ref).startOf('week').subtract(7 - this.userSettings.offset, 'days')
+      let startOfWeek = new Moment(this.refDate).startOf('week').subtract(7 - this.userSettings.offset, 'days')
       // Compensate for offset logic going too far back
-      if (new Moment(this.ref).diff(startOfWeek, 'days') >= 7) {
+      if (new Moment(this.refDate).diff(startOfWeek, 'days') >= 7) {
         startOfWeek.add(7, 'days')
       }
       let endOfWeek = new Moment(startOfWeek).add(6, 'days')
-
       let data = {
         timing: {
           startOfWeek: startOfWeek,
@@ -82,28 +88,30 @@ export default {
         },
         payees: []
       }
-
       for (let d = 0; d < 7; d++) {
         data.graph.dailyOrder[d] = new Moment(startOfWeek).add(d, 'days').format('D')
       }
-
       for (let i = 0; i < this.payees.length; i++) {
         // How many months to add to bring the reference date to the current month
-        let diff = new Moment(this.ref).diff(this.payees[i].ref, 'months')
+        let diff = new Moment(this.payees[i].day < endOfWeek.format('D') ? startOfWeek : endOfWeek).diff(this.payees[i].ref, 'months')
+        // console.log(`Payee: ${this.payees[i].name} -> ${this.payees[i].day} <  ${endOfWeek.format('D')} - ${this.payees[i].day < endOfWeek.format('D') ? 'using startOfWeek' : 'using endOfWeek'}`)
         let eventDate = new Moment(this.payees[i].ref).add(diff, 'months')
+
         if (eventDate.isBefore(startOfWeek)) {
           eventDate.add(1, 'month')
         }
+
+        // Account for end of the month issues
+        let dayValid = this.payees[i].day !== parseInt(eventDate.format('D')) ? this.payees[i].day > eventDate.daysInMonth() : true
+
         // ts and te is one day before and one day after so dates fall in between
         let ts = new Moment(startOfWeek).subtract(1, 'day')
         let te = new Moment(endOfWeek).add(1, 'day')
-
-        if (eventDate.isBetween(ts, te)) {
+        if (eventDate.isBetween(ts, te) && dayValid) {
           // Is the current payee/payment ref found in the payment list
           let isPaid = this.payments.filter((payment) => {
             return (payment.payee === this.payees[i]._id && payment.ref === eventDate.format('YYYY-MM-DD'))
           })
-
           // Hide occurences of payees before its ref date AND the payee is ACTIVE OR
           // there is a payment for the current period. Payee data may be required for
           // historical reasons
@@ -156,7 +164,7 @@ export default {
             data.stats.amountRemain = 0
             data.stats.percentRemain = 0
           }
-          // Dates do not always sort correctly. Fix fix the issue
+          // Dates do not always sort correctly. Fix the issue
           data.payees = _.sortBy(data.payees, (payee) => { return new Moment(payee.date) })
         }
       }
@@ -166,8 +174,8 @@ export default {
     ...mapState(['payees', 'payments', 'userSettings', 'init'])
   },
   filters: {
-    dayFormat (value) {
-      return new Moment(value).format('Do')
+    moment (value, format) {
+      return new Moment(value).format(format)
     },
     currencyFormat (value) {
       return '$' + parseFloat(value).toFixed(2)

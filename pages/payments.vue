@@ -58,3 +58,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  tr:hover {
+    cursor: pointer;
+  }
+</style>

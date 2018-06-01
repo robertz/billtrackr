@@ -232,10 +232,7 @@ export default {
         }
 
         // Account for end of the month issues
-        let dayValid = true
-        if (this.payees[i].day !== parseInt(eventDate.format('D'))) {
-          dayValid = eventDate.daysInMonth() <= this.payees[i].day && eventDate.format('D') === this.payees[i].day
-        }
+        let dayValid = this.payees[i].day !== parseInt(eventDate.format('D')) ? this.payees[i].day > eventDate.daysInMonth() : true
 
         // ts and te is one day before and one day after so dates fall in between
         let ts = new Moment(startOfWeek).subtract(1, 'day')

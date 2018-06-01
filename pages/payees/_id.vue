@@ -38,13 +38,15 @@
       :items="computedPayments"
       class="elevation-1 mt-3">
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.ref | moment('ddd DD MMM YYYY') }}</td>
-        <td>{{ props.item.createdAt | moment('ddd DD MMM YYYY') }}</td>
-        <td>{{ props.item.amount | currencyFormat }}</td>
+        <tr @click.stop="setForecast(props.item.ref)">
+          <td>{{ props.item.ref | moment('ddd DD MMM YYYY') }}</td>
+          <td>{{ props.item.createdAt | moment('ddd DD MMM YYYY') }}</td>
+          <td>{{ props.item.amount | currencyFormat }}</td>
+        </tr>
       </template>
     </v-data-table>
   </v-flex>
-  
+
 </template>
 
 <script>
@@ -61,6 +63,11 @@ export default {
         { text: 'Paid', sortable: false, value: 'createdAt' },
         { text: 'Amount', sortable: false, value: 'amount' }
       ]
+    }
+  },
+  methods: {
+    setForecast (dt) {
+      this.$router.push({ path: '/week?dt=' + dt })
     }
   },
   computed: {

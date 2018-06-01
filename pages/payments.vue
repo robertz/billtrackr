@@ -7,14 +7,11 @@
         class="elevation-1">
 
         <template slot="items" slot-scope="props">
-          <td>{{ props.item.payee | getName(payees  ) }}</td>
-          <td>{{ props.item.ref | dayFormat }}</td>
-          <td>{{ props.item.amount | currencyFormat }}</td>
-          <td>
-            <v-btn icon nuxt class="mx-0" :to="'/payees/'+ props.item.payee">
-              <v-icon color="teal">edit</v-icon>
-            </v-btn>
-          </td>
+          <tr @click.stop="setPayee(props.item.payee)">
+            <td>{{ props.item.payee | getName(payees) }}</td>
+            <td>{{ props.item.ref | dayFormat }}</td>
+            <td>{{ props.item.amount | currencyFormat }}</td>
+          </tr>
         </template>
 
       </v-data-table>
@@ -33,8 +30,7 @@ export default {
       headers: [
         { text: 'Name', align: 'left', sortable: false, value: 'name' },
         { text: 'Due', align: 'left', sortable: false, value: 'ref' },
-        { text: 'Amount', align: 'left', sortable: false, value: 'amount' },
-        { text: 'Actions', align: 'left', sortable: false, value: 'actions', width: '75px' }
+        { text: 'Amount', align: 'left', sortable: false, value: 'amount' }
       ]
     }
   },
@@ -57,7 +53,6 @@ export default {
       let payee = payees.filter((payee) => {
         return payee._id === value
       })
-      console.log(payee)
       return payee[0].name
     }
   }

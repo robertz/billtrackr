@@ -2,7 +2,7 @@
   <v-container v-bind="{ 'grid-list-md': true }" fluid v-if="init">
     <v-layout row>
       <v-flex>
-        <v-btn 
+        <v-btn
           color="primary"
           @click="setWeek(forecast.timing.prev)">Prev</v-btn>
       </v-flex>
@@ -10,7 +10,7 @@
           <strong>{{ forecast.timing.startOfWeek.format("dddd, MMM, Do YYYY") }} - {{ forecast.timing.endOfWeek.format("dddd, MMM, Do YYYY") }}</strong>
       </v-flex>
       <v-flex class="text-xs-right">
-        <v-btn 
+        <v-btn
           color="primary"
           @click="setWeek(forecast.timing.next)">Next</v-btn>
       </v-flex>
@@ -62,7 +62,7 @@
       <template slot="items" slot-scope="props">
         <td><nuxt-link :to="'/payees/' + props.item.id" style="text-decoration: none;">{{ props.item.name }}</nuxt-link></td>
         <td>{{ props.item.date.format('ddd, DD MMM YYYY') }}</td>
-        <td class="hidden-sm-and-down">{{ props.item.apr | pct }}</td>
+        <td class="hidden-sm-and-down">{{ props.item.apr | pct(true) }}</td>
         <td width="20%">
           <v-btn :color="props.item.isPaid ? 'success': 'warning'" block @click="handlePayment(props.item.id, props.item.isPaid)">
             <span v-if="props.item.isPaid">Paid</span>
@@ -109,6 +109,12 @@ import axios from 'axios'
 
 export default {
   middleware: 'authenticated',
+  created () {
+    // Store dt value if it was passed in
+    if (('dt' in this.$route.query) && new Moment(this.$route.query.dt).isValid()) {
+      this.$store.commit('SET_REFDATE', this.$route.query.dt)
+    }
+  },
   data () {
     return {
       addPayment: false,
@@ -130,8 +136,8 @@ export default {
     currencyFormat (value) {
       return '$' + parseFloat(value).toFixed(2)
     },
-    pct (value) {
-      if (!value) return
+    pct (value, hideZero = false) {
+      if (!value && hideZero) return
       return parseFloat(value).toFixed(3) + '%'
     },
     payeeName (value, payees) {
@@ -217,15 +223,24 @@ export default {
       }
       for (let i = 0; i < this.payees.length; i++) {
         // How many months to add to bring the reference date to the current month
-        let diff = new Moment(this.refDate).diff(this.payees[i].ref, 'months')
+        let diff = new Moment(this.payees[i].day < endOfWeek.format('D') ? startOfWeek : endOfWeek).diff(this.payees[i].ref, 'months')
+        // console.log(`Payee: ${this.payees[i].name} -> ${this.payees[i].day} <  ${endOfWeek.format('D')} - ${this.payees[i].day < endOfWeek.format('D') ? 'using startOfWeek' : 'using endOfWeek'}`)
         let eventDate = new Moment(this.payees[i].ref).add(diff, 'months')
+
         if (eventDate.isBefore(startOfWeek)) {
           eventDate.add(1, 'month')
         }
+
+        // Account for end of the month issues
+        let dayValid = true
+        if (this.payees[i].day !== parseInt(eventDate.format('D'))) {
+          dayValid = eventDate.daysInMonth() <= this.payees[i].day && eventDate.format('D') === this.payees[i].day
+        }
+
         // ts and te is one day before and one day after so dates fall in between
         let ts = new Moment(startOfWeek).subtract(1, 'day')
         let te = new Moment(endOfWeek).add(1, 'day')
-        if (eventDate.isBetween(ts, te)) {
+        if (eventDate.isBetween(ts, te) && dayValid) {
           // Is the current payee/payment ref found in the payment list
           let isPaid = this.payments.filter((payment) => {
             return (payment.payee === this.payees[i]._id && payment.ref === eventDate.format('YYYY-MM-DD'))
@@ -282,7 +297,7 @@ export default {
             data.stats.amountRemain = 0
             data.stats.percentRemain = 0
           }
-          // Dates do not always sort correctly. Fix fix the issue
+          // Dates do not always sort correctly. Fix the issue
           data.payees = _.sortBy(data.payees, (payee) => { return new Moment(payee.date) })
         }
       }

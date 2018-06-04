@@ -1,15 +1,14 @@
 <template>
-  <v-jumbotron 
-    src="/images/victoria-heath-597279-unsplash.jpg"
+  <v-jumbotron
+    src="/images/aidan-bartos-313782-unsplash.jpg"
     dark>
-    <v-container 
+    <v-container
       fill-height>
       <v-layout align-center>
         <v-flex>
           <h3 class="display-3">BillTrackr</h3>
-          <span class="subheading">Easily track who you pay each month</span>
-          <v-divider class="my-3"></v-divider>
-          <v-btn large color="primary" class="mx-0" @click="login()">Sign In</v-btn>
+          <div class="subheading">Easily track who you pay each month</div>
+          <v-btn large color="primary" class="mx-0 my-3" @click="login()">Sign In</v-btn>
         </v-flex>
       </v-layout>
     </v-container>

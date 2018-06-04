@@ -15,9 +15,12 @@
             <v-card flat tile class="elevation-1">
               <v-card-text>
                 <v-layout row>
-                  <v-flex xs11>
+                  <v-flex xs2>
+                    <h2>{{ payee.date | moment('Do') }}</h2>
+                  </v-flex>
+                  <v-flex xs9>
                     <h3>{{ payee.name }}</h3>
-                    {{ payee.amount | currencyFormat }} on the {{ payee.date | moment('Do') }}
+                    {{ payee.amount | currencyFormat }}
                   </v-flex>
                   <v-flex xs1>
                     <v-icon v-if="payee.isPaid" class="green--text">done</v-icon>

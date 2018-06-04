@@ -3,7 +3,7 @@
   <v-layout>
     <v-flex xs12>
       <v-container fluid>
-        <div class="title">This Week</div>
+        <div class="title">Payments Due</div>
       </v-container>
       <v-container v-bind="{ [`grid-list-md`]: true }" fluid>
         <v-layout row wrap>

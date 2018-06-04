@@ -12,7 +12,8 @@ const store = () => new Vuex.Store({
     user: null,
     userSettings: null,
     payees: [],
-    payments: []
+    payments: [],
+    forecast: 'week'
   },
   getters: {
     isAuthenticated (state) {
@@ -47,6 +48,9 @@ const store = () => new Vuex.Store({
     SET_REFDATE (state, refDate) {
       state.refDate = refDate || null
     },
+    SET_FORECAST (state, forecast) {
+      state.forecast = forecast || 'week'
+    },
     SET_INIT (state, init) {
       state.init = init
     },
@@ -66,6 +70,9 @@ const store = () => new Vuex.Store({
     },
     setRefDate ({ commit }, refDate) {
       commit('SET_REFDATE', refDate)
+    },
+    setForecast ({ commit }, forecast) {
+      commit('SET_FORECAST', forecast)
     },
     async refreshUserSettings (ctx) {
       let res = await axios.get(`https://api.billtrackr.com/user/${this.state.user.app_metadata.userid}/settings`)

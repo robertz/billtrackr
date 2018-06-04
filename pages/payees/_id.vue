@@ -1,6 +1,11 @@
 <template>
 
   <v-flex fill-height v-if="init">
+    <v-btn
+      :to="'/' + forecast">
+      Forecast
+    </v-btn>
+
     <v-card>
       <v-card-title primary-title>
         <div class="headline">{{ current.name }}</div>
@@ -79,7 +84,7 @@ export default {
     current () {
       return this.payees.filter(payee => payee._id === this.$route.params.id)[0] || {}
     },
-    ...mapState(['payees', 'payments', 'init']),
+    ...mapState(['init', 'payees', 'payments', 'forecast']),
     ...mapGetters(['loggedUser'])
   },
   filters: {

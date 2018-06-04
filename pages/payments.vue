@@ -1,6 +1,12 @@
 <template>
-  <v-layout row fill-height>
+  <v-layout row fill-height v-if="init">
     <v-flex xs12>
+
+      <v-btn
+        :to="'/' + forecast">
+        Forecast
+      </v-btn>
+
       <v-data-table
         :headers="headers"
         :items="payments"
@@ -40,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['payees', 'payments'])
+    ...mapState(['init', 'payees', 'payments', 'forecast'])
   },
   filters: {
     dayFormat (value) {

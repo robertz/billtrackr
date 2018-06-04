@@ -114,6 +114,7 @@ export default {
     if (('dt' in this.$route.query) && new Moment(this.$route.query.dt).isValid()) {
       this.$store.commit('SET_REFDATE', this.$route.query.dt)
     }
+    this.$store.commit('SET_FORECAST', 'month')
   },
   data () {
     return {

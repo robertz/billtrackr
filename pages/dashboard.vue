@@ -1,7 +1,25 @@
 <template>
 
-  <v-layout>
+  <v-layout v-if="init">
     <v-flex xs12>
+      <!-- Top 5's -->
+      <v-container fluid v-if="topAPR">
+        <v-layout row>
+          <v-flex xs12 sm5 md3>
+            <v-card class="elevation-4">
+              <v-card-text>
+                <h3>Top 5 by APR%</h3>
+                <v-divider class="mb-2"></v-divider>
+                <v-layout row v-for="item in topAPR" :key="item._id">
+                  <v-flex xs10>{{ item.name }}</v-flex>
+                  <v-flex xs2>{{ item.apr | pct }}</v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+
       <v-container fluid>
         <div class="title">Payments Due</div>
       </v-container>
@@ -51,6 +69,11 @@ export default {
     }
   },
   computed: {
+    topAPR () {
+      let hasAPR = this.payees.filter((payee) => { return payee.apr > 0 })
+      let sorted = _.orderBy(hasAPR, ['apr'], ['desc'])
+      return sorted.slice(0, 5)
+    },
     forecast () {
       if (!this.init) return []
       Moment.tz.setDefault(this.userSettings.tz)
@@ -174,11 +197,14 @@ export default {
       return data
     },
     ...mapGetters(['loggedUser']),
-    ...mapState(['payees', 'payments', 'userSettings', 'init'])
+    ...mapState(['init', 'payees', 'payments', 'userSettings'])
   },
   filters: {
     moment (value, format) {
       return new Moment(value).format(format)
+    },
+    pct (value) {
+      return parseFloat(value).toFixed(2) + '%'
     },
     currencyFormat (value) {
       return '$' + parseFloat(value).toFixed(2)

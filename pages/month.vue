@@ -322,7 +322,7 @@ export default {
 
       return data
     },
-    ...mapState(['payees', 'payments', 'userSettings', 'refDate', 'init']),
+    ...mapState(['init', 'payees', 'payments', 'userSettings', 'refDate']),
     ...mapGetters(['loggedUser'])
   },
   filters: {

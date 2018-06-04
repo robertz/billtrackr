@@ -3,24 +3,39 @@
   <v-layout v-if="init">
     <v-flex xs12>
       <!-- Top 5's -->
-      <v-container fluid v-if="topAPR">
+      <v-container v-bind="{ [`grid-list-md`]: true }" fluid>
         <v-layout row>
-          <v-flex xs12 sm5 md3>
-            <v-card class="elevation-4">
+
+          <v-flex xs12 sm6 md3 v-if="displayWidgets.topAPR">
+            <v-card class="elevation-2">
               <v-card-text>
                 <h3>Top 5 by APR%</h3>
                 <v-divider class="mb-2"></v-divider>
                 <v-layout row v-for="item in topAPR" :key="item._id">
-                  <v-flex xs10>{{ item.name }}</v-flex>
-                  <v-flex xs2>{{ item.apr | pct }}</v-flex>
+                  <v-flex xs9><nuxt-link :to="'/payees/' + item._id">{{ item.name }}</nuxt-link></v-flex>
+                  <v-flex xs3>{{ item.apr | pct }}</v-flex>
                 </v-layout>
               </v-card-text>
             </v-card>
           </v-flex>
+
+          <v-flex xs12 sm6 md3 v-if="displayWidgets.topAmount">
+            <v-card class="elevation-2">
+              <v-card-text>
+                <h3>Top 5 by Amount</h3>
+                <v-divider class="mb-2"></v-divider>
+                <v-layout row v-for="item in topAmount" :key="item._id">
+                  <v-flex xs9><nuxt-link :to="'/payees/' + item._id">{{ item.name }}</nuxt-link></v-flex>
+                  <v-flex xs3>{{ item.amount | currencyFormat }}</v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+
         </v-layout>
       </v-container>
 
-      <v-container fluid>
+      <v-container fluid v-if="displayWidgets.due">
         <div class="title">Payments Due</div>
       </v-container>
       <v-container v-bind="{ [`grid-list-md`]: true }" fluid>
@@ -69,9 +84,21 @@ export default {
     }
   },
   computed: {
+    displayWidgets () {
+      return {
+        topAPR: this.topAPR.length,
+        topAmount: this.payees.length,
+        due: this.forecast.payees.length,
+        empty: !this.payees.length
+      }
+    },
     topAPR () {
       let hasAPR = this.payees.filter((payee) => { return payee.apr > 0 })
       let sorted = _.orderBy(hasAPR, ['apr'], ['desc'])
+      return sorted.slice(0, 5)
+    },
+    topAmount () {
+      let sorted = _.orderBy(this.payees, ['amount'], ['desc'])
       return sorted.slice(0, 5)
     },
     forecast () {
@@ -212,3 +239,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  a {
+    text-decoration: none;
+  }
+</style>
+

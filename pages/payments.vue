@@ -3,7 +3,8 @@
     <v-flex xs12>
 
       <v-btn
-        :to="'/' + forecast">
+        :to="'/' + forecast"
+        color="primary">
         Forecast
       </v-btn>
 

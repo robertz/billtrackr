@@ -6,7 +6,7 @@
       <v-container v-bind="{ [`grid-list-md`]: true }" fluid>
         <v-layout row>
 
-          <v-flex xs12 sm6 md3 v-if="displayWidgets.topAPR">
+          <v-flex xs12 md3 v-if="displayWidgets.topAPR">
             <v-card class="elevation-2">
               <v-card-text>
                 <h3>Top 5 by APR%</h3>
@@ -19,7 +19,7 @@
             </v-card>
           </v-flex>
 
-          <v-flex xs12 sm6 md3 v-if="displayWidgets.topAmount">
+          <v-flex xs12 md3 v-if="displayWidgets.topAmount">
             <v-card class="elevation-2">
               <v-card-text>
                 <h3>Top 5 by Amount</h3>

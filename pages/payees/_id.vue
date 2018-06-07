@@ -33,13 +33,22 @@
               <span class="ml-2">Pay Online</span>
             </v-btn>
 
-            <v-btn
-              @click="handleUpdate()"
-              class="d-block mt-1"
-              color="success"
-              small>
-              Edit
-            </v-btn>
+            <div class="mt-2">
+              <v-btn
+                @click="handleUpdate()"
+                color="success"
+                small>
+                Edit
+              </v-btn>
+
+              <v-btn
+                @click="showConfirm = true"
+                class="ml-2"
+                color="error"
+                small>
+                Delete
+              </v-btn>
+            </div>
           </v-flex>
 
         </v-layout>
@@ -141,6 +150,21 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="showConfirm" max-width="400">
+      <v-card>
+        <v-card-title class="headline">Delete {{ current.name }}</v-card-title>
+        <v-card-text>
+          <h3 class="red--text">Danger!</h3>
+          This will delete the payee as well as all payment information. It cannot be undone.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click.native="showConfirm = false">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="deletePayee()">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-flex>
 
 </template>
@@ -161,6 +185,7 @@ export default {
         { text: 'Amount', sortable: false, value: 'amount' }
       ],
       createFlag: false,
+      showConfirm: false,
       errors: {
         apr: [],
         url: []
@@ -204,6 +229,12 @@ export default {
       this.editing.url = this.current.url
       this.editing.apr = this.current.apr
       this.createFlag = true
+    },
+    async deletePayee () {
+      await axios.delete(`https://api.billtrackr.com/user/${this.loggedUser.app_metadata.userid}/payee/${this.$route.params.id}`)
+      this.$store.dispatch('refreshPayees')
+      this.showConfirm = false
+      this.$router.push({ path: '/payees' })
     },
     async updateePayee () {
       // save the payment currently queued

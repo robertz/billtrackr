@@ -140,7 +140,6 @@ export default {
       this.$router.push({ path: '/month?dt=' + dt })
     },
     handlePayment (id, isPaid) {
-      console.dir([id, isPaid])
       if (isPaid) {
         this.$router.push({ path: `payees/${id}` })
       }

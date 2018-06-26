@@ -208,11 +208,8 @@ export default {
     aprCheck () {
       this.errors.apr = []
       if (!this.editing.apr) return true
-
       let current = parseFloat(this.editing.apr)
-
       this.errors.apr = current < 0 || current > 100 ? 'APR can be between 0 and 100' : []
-
       return true
     },
     urlCheck () {

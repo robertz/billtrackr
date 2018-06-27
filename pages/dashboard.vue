@@ -18,7 +18,6 @@
               </v-card-text>
             </v-card>
           </v-flex>
-
           <v-flex xs12 md4 v-if="displayWidgets.topAmount">
             <v-card class="elevation-2">
               <v-card-text>
@@ -221,6 +220,7 @@ export default {
           data.payees = _.sortBy(data.payees, (payee) => { return new Moment(payee.date) })
         }
       }
+      // another line
       return data
     },
     ...mapGetters(['loggedUser']),

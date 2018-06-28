@@ -88,6 +88,10 @@
     middleware: 'authenticated',
     async created () {
       if (this.isAuthenticated && !this.$store.state.payees.length) {
+        if (this.loggedUser.exp < Date.now() / 1000) {
+          this.$router.push({ path: '/auth/sign-off' })
+        }
+
         await this.$store.dispatch('refreshUserSettings')
         await this.$store.dispatch('refreshPayees')
         await this.$store.dispatch('refreshPayments')

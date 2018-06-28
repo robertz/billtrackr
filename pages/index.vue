@@ -20,7 +20,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   layout: 'anon',
-  created () {
+  mounted () {
     if (this.isAuthenticated) this.$router.push({ path: '/dashboard' })
   },
   data () {
@@ -28,11 +28,10 @@ export default {
   },
   methods: {
     login () {
-      if (this.isAuthenticated) {
+      if (this.loggedUser) {
         this.$router.push({ path: '/dashboard' })
-      } else {
-        this.$router.push({ path: '/auth/sign-in' })
       }
+      this.$router.push({ path: '/auth/sign-in' })
     }
   },
   computed: {

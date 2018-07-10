@@ -83,13 +83,17 @@
   import { mapGetters, mapState } from 'vuex'
   import Moment from 'moment-timezone'
   import axios from 'axios'
+  import { unsetToken } from '~/utils/auth'
+  import { logout } from '~/utils/lock'
 
   export default {
     middleware: 'authenticated',
     async created () {
       if (this.isAuthenticated && !this.$store.state.payees.length) {
         if (this.loggedUser.exp < Date.now() / 1000) {
-          this.$router.push({ path: '/auth/sign-off' })
+          unsetToken()
+          logout()
+          this.$router.push({ path: '/auth/sign-in' })
         }
 
         await this.$store.dispatch('refreshUserSettings')

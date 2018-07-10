@@ -28,9 +28,6 @@ export default {
   },
   methods: {
     login () {
-      if (this.loggedUser) {
-        this.$router.push({ path: '/dashboard' })
-      }
       this.$router.push({ path: '/auth/sign-in' })
     }
   },

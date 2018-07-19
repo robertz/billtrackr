@@ -60,7 +60,11 @@
       hide-actions
       class="elevation-1 mt-4">
       <template slot="items" slot-scope="props">
-        <td><nuxt-link :to="'/payees/' + props.item.id" style="text-decoration: none;">{{ props.item.name }}</nuxt-link></td>
+        <td>
+          <nuxt-link :to="'/payees/' + props.item.id" style="text-decoration: none;">{{ props.item.name }}</nuxt-link>
+          &nbsp;&nbsp;
+          <v-icon small v-if="props.item.autopay" color="green">cached</v-icon>
+        </td>
         <td>{{ props.item.date.format('ddd, DD MMM YYYY') }}</td>
         <td class="hidden-sm-and-down">{{ props.item.apr | pct(true) }}</td>
         <td width="20%">

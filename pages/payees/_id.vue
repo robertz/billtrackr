@@ -21,6 +21,9 @@
           <v-flex xs12 v-if="computedAverage != current.amount">
             Average payment is <strong>{{ computedAverage | currencyFormat }}</strong>
           </v-flex>
+          <v-flex xs12 v-if="current.autopay">
+            Autopay Active <v-icon small>cached</v-icon>
+          </v-flex>
 
           <v-flex xs12>
             <v-btn
@@ -137,6 +140,12 @@
                 </v-text-field>
               </v-flex>
 
+              <v-flex xs12>
+                <v-checkbox
+                  v-model="editing.autopay"
+                  label="Autopay">
+                </v-checkbox>
+              </v-flex>
             </v-layout>
 
           </v-form>
@@ -216,6 +225,7 @@ export default {
       this.errors.url = []
       if (!this.editing.url) return true
       this.errors.url = !/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!\\\\\w]*))?)/.test(this.editing.url) ? ['URL is invalid'] : []
+      return true
     },
     handleUpdate () {
       this.$refs.form.reset()
@@ -225,6 +235,7 @@ export default {
       this.editing.ref = this.current.ref
       this.editing.url = this.current.url
       this.editing.apr = this.current.apr
+      this.editing.autopay = this.current.autopay
       this.createFlag = true
     },
     async deletePayee () {
@@ -244,7 +255,8 @@ export default {
           ref: this.editing.ref,
           url: this.editing.url,
           apr: this.editing.apr,
-          day: new Moment(this.editing.ref).format('D')
+          day: new Moment(this.editing.ref).format('D'),
+          autopay: this.editing.autopay
         }, {
           headers: {
             'Content-Type': 'application/json'

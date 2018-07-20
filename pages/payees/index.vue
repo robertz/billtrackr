@@ -93,6 +93,13 @@
                 </v-text-field>
               </v-flex>
 
+              <v-flex xs12>
+                <v-switch
+                  v-model="editing.autopay"
+                  label="Autopay">
+                </v-switch>
+              </v-flex>
+
             </v-layout>
 
           </v-form>
@@ -177,7 +184,8 @@ export default {
           ref: this.editing.ref,
           url: this.editing.url,
           apr: this.editing.apr,
-          day: new Moment(this.editing.ref).format('D')
+          day: new Moment(this.editing.ref).format('D'),
+          autopay: this.editing.autopay
         }, {
           headers: {
             'Content-Type': 'application/json'

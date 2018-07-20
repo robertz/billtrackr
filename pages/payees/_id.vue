@@ -141,10 +141,10 @@
               </v-flex>
 
               <v-flex xs12>
-                <v-checkbox
+                <v-switch
                   v-model="editing.autopay"
                   label="Autopay">
-                </v-checkbox>
+                </v-switch>
               </v-flex>
             </v-layout>
 

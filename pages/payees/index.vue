@@ -17,7 +17,11 @@
         <template slot="items" slot-scope="props">
           <tr @click.stop="selectRow(props.item._id)">
             <td>{{ props.item.ref | moment('Do') }}</td>
-            <td>{{ props.item.name }}</td>
+            <td>
+              {{ props.item.name }}
+              &nbsp;
+              <v-icon small v-if="props.item.autopay">cached</v-icon>
+            </td>
             <td class="hidden-sm-and-down">{{ props.item.apr | pctFormat }}</td>
             <td>{{ props.item.amount | currencyFormat }}</td>
           </tr>

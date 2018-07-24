@@ -58,13 +58,14 @@ export default {
   },
   data () {
     return {
+      flexSize: this.$vuetify.breakpoint.mdAndDown ? 12 : 6,
       cards: [
-        { title: 'Dashboard', text: 'View your week at a glance along with some basic stats', src: '/images/screens/Dashboard.png', flex: 6 },
-        { title: 'Weekly Forecast', text: 'See the details you need to stay on top of your bills for the week', src: '/images/screens/Week.png', flex: 6 },
-        { title: 'Monthly Forecast', text: 'Prefer seeing your whole month at a glance? Track all your bills', src: '/images/screens/Month.png', flex: 6 },
-        { title: 'Payees', text: 'See everyone you pay in one easy screen along with APR and yearly totals', src: '/images/screens/Payee.png', flex: 6 },
-        { title: 'Detail', text: 'Need details for a specific bill? See your monthly average and yearly amounts. You can also see your payment history with totals', src: '/images/screens/Detail.png', flex: 6 },
-        { title: 'Payments', text: 'Quickly see your payment history', src: '/images/screens/Payments.png', flex: 6 }
+        { title: 'Dashboard', text: 'View your week at a glance along with some basic stats', src: '/images/screens/Dashboard.png', flex: this.flexSize },
+        { title: 'Weekly Forecast', text: 'See the details you need to stay on top of your bills for the week', src: '/images/screens/Week.png', flex: this.flexSize },
+        { title: 'Monthly Forecast', text: 'Prefer seeing your whole month at a glance? Track all your bills', src: '/images/screens/Month.png', flex: this.flexSize },
+        { title: 'Payee Listing', text: 'See everyone you pay in one easy screen along with APR and yearly totals', src: '/images/screens/Payee.png', flex: this.flexSize },
+        { title: 'Detailed Payee/Payment Information', text: 'See your monthly average and yearly amounts', src: '/images/screens/Detail.png', flex: this.flexSize },
+        { title: 'Payment History', text: 'Quickly see all your payments', src: '/images/screens/Payments.png', flex: this.flexSize }
       ]
     }
   },

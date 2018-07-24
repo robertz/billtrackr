@@ -22,7 +22,7 @@ module.exports = {
       { hid: 'og:description', property: 'og:description', content: 'BillTrackr helps you track all the people you pay each month so you never forget a payment again!' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/png', href: '/favicon.png' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
     ]
   },

@@ -22,6 +22,10 @@
           <v-flex xs12 v-if="computedAverage != current.amount">
             Average payment is <strong>{{ computedAverage | currencyFormat }}</strong>
           </v-flex>
+          <v-flex xs12>
+            You have made <strong>{{ computedPayments.length }}</strong> payments for a total of <strong>{{ computedPaymentsTotal | currencyFormat }}</strong>
+          </v-flex>
+          <br />
           <v-flex xs12 v-if="current.autopay">
             Autopay Active <v-icon small>cached</v-icon>
           </v-flex>
@@ -278,6 +282,9 @@ export default {
     },
     computedPayments () {
       return this.payments.filter((payment) => { return payment.payee === this.id })
+    },
+    computedPaymentsTotal () {
+      return this.computedPayments.reduce((acc, payment) => acc + payment.amount, 0)
     },
     current () {
       return this.payees.filter(payee => payee._id === this.$route.params.id)[0] || {}

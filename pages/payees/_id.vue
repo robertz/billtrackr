@@ -17,6 +17,7 @@
         <v-layout row wrap>
           <v-flex xs12>
             Payment of <strong>{{ current.amount | currencyFormat }}</strong> due on the <strong>{{ current.ref | moment('Do') }}</strong>
+            (approximately <strong>{{ current.amount * 12 | currencyFormat }}</strong> per year)
           </v-flex>
           <v-flex xs12 v-if="computedAverage != current.amount">
             Average payment is <strong>{{ computedAverage | currencyFormat }}</strong>

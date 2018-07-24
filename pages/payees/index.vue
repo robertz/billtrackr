@@ -24,6 +24,7 @@
             </td>
             <td class="hidden-sm-and-down">{{ props.item.apr | pctFormat }}</td>
             <td>{{ props.item.amount | currencyFormat }}</td>
+            <td class="hidden-sm-and-down">{{ props.item.amount * 12 | currencyFormat }}</td>
           </tr>
         </template>
       </v-data-table>
@@ -134,7 +135,8 @@ export default {
         { text: 'Due', align: 'left', sortable: false, value: 'ref', width: '75px' },
         { text: 'Name', align: 'left', sortable: false, value: 'name' },
         { text: 'APR %', align: 'left', sortable: false, value: 'apr', class: 'hidden-sm-and-down' },
-        { text: 'Amount', align: 'left', sortable: false, value: 'amount' }
+        { text: 'Amount', align: 'left', sortable: false, value: 'amount' },
+        { text: 'Per Year', align: 'left', sortable: false, value: 'amount', class: 'hidden-sm-and-down' }
       ],
       errors: {
         apr: [],

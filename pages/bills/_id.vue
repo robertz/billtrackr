@@ -79,7 +79,7 @@
 
     <v-dialog v-model="createFlag" max-width="400">
       <v-card>
-        <v-card-title class="headline">Edit Payee</v-card-title>
+        <v-card-title class="headline">Edit Bill</v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="editing.valid" lazy-validation>
 
@@ -169,7 +169,7 @@
         <v-card-title class="headline">Delete {{ current.name }}</v-card-title>
         <v-card-text>
           <h3 class="red--text">Danger!</h3>
-          This will delete the payee as well as all payment information. It cannot be undone.
+          This will delete this bill as well as all payment information. It cannot be undone.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -247,7 +247,7 @@ export default {
       await axios.delete(`https://api.billtrackr.com/user/${this.loggedUser.app_metadata.userid}/payee/${this.$route.params.id}`)
       this.$store.dispatch('refreshPayees')
       this.showConfirm = false
-      this.$router.push({ path: '/payees' })
+      this.$router.push({ path: '/bills' })
     },
     async updateePayee () {
       // save the payment currently queued

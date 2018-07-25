@@ -59,12 +59,11 @@
                   label="Start of Week"
                   v-model="offsetProxy">
                 </v-select>
-                <v-select
-                  autocomplete
+                <v-autocomplete
                   :items = zoneNames
                   label="Timezone"
                   v-model="tzProxy">
-                </v-select>
+                </v-autocomplete>
               </v-flex>
             </v-layout>
           </v-container>
@@ -117,7 +116,7 @@
         fixed: false,
         items: [
           { icon: 'home', title: 'Dashboard', to: '/dashboard' },
-          { icon: 'people', title: 'Payees', to: '/payees' },
+          { icon: 'people', title: 'Bills', to: '/bills' },
           { icon: 'attach_money', title: 'Payments', to: '/payments' },
           { icon: 'today', title: 'Week', to: '/week' },
           { icon: 'timeline', title: 'Month', to: '/month' },

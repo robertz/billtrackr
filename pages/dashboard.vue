@@ -12,7 +12,7 @@
                 <h3>Top 5 by APR%</h3>
                 <v-divider class="mb-2"></v-divider>
                 <v-layout row v-for="item in topAPR" :key="item._id">
-                  <v-flex xs9><nuxt-link :to="'/payees/' + item._id">{{ item.name }}</nuxt-link></v-flex>
+                  <v-flex xs9><nuxt-link :to="'/bills/' + item._id">{{ item.name }}</nuxt-link></v-flex>
                   <v-flex xs3>{{ item.apr | pct }}</v-flex>
                 </v-layout>
               </v-card-text>
@@ -24,7 +24,7 @@
                 <h3>Top 5 by Amount</h3>
                 <v-divider class="mb-2"></v-divider>
                 <v-layout row v-for="item in topAmount" :key="item._id">
-                  <v-flex xs9><nuxt-link :to="'/payees/' + item._id">{{ item.name }}</nuxt-link></v-flex>
+                  <v-flex xs9><nuxt-link :to="'/bills/' + item._id">{{ item.name }}</nuxt-link></v-flex>
                   <v-flex xs3>{{ item.amount | currencyFormat }}</v-flex>
                 </v-layout>
               </v-card-text>

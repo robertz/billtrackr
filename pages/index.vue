@@ -60,8 +60,10 @@ export default {
         { title: 'Dashboard', text: 'See basic "Top 5" stats for your bills and quickly track what has been paid for the week', src: '/images/screens/Dashboard.png', flex: 4 },
         { title: 'Weekly Forecast', text: 'See what is due, what is paid and what is left this week', src: '/images/screens/Week.png', flex: 4 },
         { title: 'Monthly Forecast', text: 'Prefer seeing your whole month at a glance? See what is due, what is paid and what is left this month', src: '/images/screens/Month.png', flex: 4 },
-        { title: 'Payee Listing', text: 'See all your bills in one easy screen along with APR and yearly totals. Also see which bills are paid automatically so you never forget a bill', src: '/images/screens/Payee.png', flex: 4 },
+        { title: 'Bills List', text: 'See all your bills in one easy screen along with APR and yearly totals. Also see which bills are paid automatically so you never forget a bill', src: '/images/screens/Payee.png', flex: 4 },
+        { title: 'Create Bill', text: 'Enter in basic information to create a new bill and begin tracking it immediately', src: '/images/screens/NewBill.png', flex: 4 },
         { title: 'Detailed Bill/Payment Information', text: 'See your monthly amount, monthly average and yearly amount as well as your payment history', src: '/images/screens/Detail.png', flex: 4 },
+        { title: 'Update Bill', text: 'Something change? It is easy to update the details of your bill', src: '/images/screens/EditBill.png', flex: 4 },
         { title: 'Payment History', text: 'See all payments you have made', src: '/images/screens/Payments.png', flex: 4 }
       ]
     }

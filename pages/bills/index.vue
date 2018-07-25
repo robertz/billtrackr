@@ -32,7 +32,7 @@
 
     <v-dialog v-model="createFlag" max-width="400">
       <v-card>
-        <v-card-title class="headline">Create Payee</v-card-title>
+        <v-card-title class="headline">Create Bill</v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="editing.valid" lazy-validation>
 
@@ -178,7 +178,7 @@ export default {
       this.createFlag = true
     },
     selectRow (id) {
-      this.$router.push({ path: `/payees/${id}` })
+      this.$router.push({ path: `/bills/${id}` })
     },
     async createPayee () {
       // save the payment currently queued

@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     setPayee (id) {
-      this.$router.push({ path: `/payees/${id}` })
+      this.$router.push({ path: `/bills/${id}` })
     }
   },
   computed: {

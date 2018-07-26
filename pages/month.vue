@@ -248,7 +248,7 @@ export default {
 
       for (let i = 0; i < this.payees.length; i++) {
         // How many months to add to bring the reference date to the current month
-        let diff = new Moment(this.refDate).diff(this.payees[i].ref, 'months')
+        let diff = new Moment(this.refDate).startOf('month').diff(this.payees[i].ref, 'months')
 
         let eventDate = new Moment(this.payees[i].ref).add(diff, 'months')
         if (eventDate.isBefore(data.timing.startOfMonth)) {

@@ -159,7 +159,7 @@ export default {
     },
     handlePayment (id, isPaid) {
       if (isPaid) {
-        this.$router.push({ path: `payees/${id}` })
+        this.$router.push({ path: `/bills/${id}` })
       }
       let payeeData = this.forecast.payees.filter((payee) => { return payee.id === id })[0]
       this.payment.id = id

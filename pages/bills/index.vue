@@ -1,14 +1,7 @@
 <template>
 
   <v-layout row>
-    <v-flex xs12>
-      <v-btn
-        fab
-        dark
-        color="red"
-        @click.native="handleAddNew()">
-        <v-icon>add</v-icon>
-      </v-btn>
+    <v-flex xs11>
       <v-data-table
         :headers="headers"
         :items="payees"
@@ -29,7 +22,18 @@
         </template>
       </v-data-table>
     </v-flex>
-
+    <v-flex xs1>
+      <v-btn
+        fab
+        fixed
+        bottom
+        right
+        dark
+        color="red"
+        @click.native="handleAddNew()">
+        <v-icon>add</v-icon>
+      </v-btn>
+    </v-flex>
     <v-dialog v-model="createFlag" max-width="400">
       <v-card>
         <v-card-title class="headline">Create Bill</v-card-title>

@@ -1,4 +1,7 @@
 {
   "name": "billtrackr",
-  "alias": "billtrackr.com"
+  "alias": "billtrackr.com",
+  "scale": {
+    "sfo1": { "min": 1, "max": 1 }
+  }
 }

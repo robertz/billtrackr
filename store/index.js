@@ -88,15 +88,6 @@ const store = () => new Vuex.Store({
     },
     async setInitialized (ctx) {
       ctx.commit('SET_INIT', true)
-    },
-    async nuxtServerInit ({ commit }) {
-      if (!this.state.user) return
-      let settings = await axios.get(`https://api.billtrackr.com/user/${this.state.user.app_metadata.userid}/settings`)
-      let payees = await axios.get(`https://api.billtrackr.com/user/${this.state.user.app_metadata.userid}/payees`)
-      let payments = await axios.get(`https://api.billtrackr.com/user/${this.state.user.app_metadata.userid}/payments`)
-      commit('SET_USERSETTINGS', settings.data)
-      commit('SET_PAYEES', payees.data)
-      commit('SET_PAYMENTS', payments.data)
     }
   }
 })

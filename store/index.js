@@ -21,15 +21,6 @@ const store = () => new Vuex.Store({
     },
     loggedUser (state) {
       return state.user
-    },
-    userSettings (state) {
-      return state.userSettings
-    },
-    payees (state) {
-      return state.payees
-    },
-    payments (state) {
-      return state.payments
     }
   },
   mutations: {

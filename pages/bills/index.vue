@@ -13,7 +13,7 @@
             <td>
               {{ props.item.name }}
               &nbsp;
-              <v-icon small v-if="props.item.autopay">cached</v-icon>
+              <v-icon small v-if="props.item.autopay" class="green--text">cached</v-icon>
             </td>
             <td class="hidden-sm-and-down">{{ props.item.apr | pctFormat }}</td>
             <td>{{ props.item.amount | currencyFormat }}</td>

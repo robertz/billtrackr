@@ -7,7 +7,6 @@ export default function ({ store, redirect }) {
     // session was authenticated but has timed out
     if (store.getters.loggedUser.exp < Date.now() / 1000) {
       unsetToken()
-      logout()
       return
     }
     return redirect('/dashboard')
